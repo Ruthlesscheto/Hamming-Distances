@@ -28,6 +28,7 @@ pass
 
 def average():
     average = sum(hammingDistances) / len(hammingDistances)
+    
     print("Average: " + str(average))
 pass
 
