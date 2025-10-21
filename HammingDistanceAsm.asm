@@ -99,7 +99,7 @@ add $t0, $0, $0 #i variable in the for loop
 la $t2, result #loads address of result
 mul $t1, $t1, $t1 
 print:
-    beq $t0, $t1, endprint
+    
     lw $a0, 0($t2)
     li $v0, 1
     syscall
@@ -108,11 +108,10 @@ print:
     li $a0, 10     # ASCII code for newline
     syscall
 
-    addi $t0, $t0, 1
-    addi $t2, $t2, 4
-    j print
+    addi $t0, $t0, 1 #increment i
+    addi $t2, $t2, 4 # increment address
+    blt $t0, $t1, print
 
-endprint:
     li $v0, 10
     syscall
 
