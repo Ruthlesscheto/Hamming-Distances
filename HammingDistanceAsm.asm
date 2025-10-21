@@ -1,7 +1,8 @@
 .data
 N: .word 4 #number of words
 L: .word 6 #lenght of sequnces
-seqs: .word 43, 52, 25, 32  
+seqs: .word 43, 52, 25, 32 
+input: .space 16 # 4 words 4 bytes each 
 result: .space 64 # we need to store 16 results #each sequence is 4x4 words and it is 16x4 bytes in space
 .text
 main:
@@ -13,6 +14,24 @@ lw $t1, 0($t0) #reads address goes to memory and stores value in t1 register
 #calculate hamming distance and record it into memory array
 la $t2, L 
 lw $t3, 0($t2)
+
+#optional keyboard input load
+#for(i = 0; i < 4 ; i++)
+#{
+#
+#}
+#optional if we want to read from input. 
+la $t2, input #address of array in memory
+addi $t0, $0, 0 #index i 
+forinput:
+    li $v0, 5 #loads value from input to register
+    syscall
+    add $t4, $0, $v0 #store value in register t4
+    sw $t4, 0($t2) #store this into memory 
+    addi $t2, $t2, 4
+    addi $t0, $t0, 1 #increment i
+blt $t0, $t1, forinput
+
 
 
 #int z;
@@ -32,14 +51,15 @@ add $t0, $0, $0 #i in first loop
 add $t2, $0, $0 # y in the second loop
 
 la $t4, result  # z or address in memory for result array
-
+#!!! For Input array we want to adjust it to say input not seqs
 la $t5, seqs # address of seq is in $t5 register for x in the loop
 
 
 outerloop:
     beq $t1, $t0, jump
     lw $t6, 0($t5) #contains the word corresponding to that address x
-    la $t7, seqs #address of seq for y in the loop
+    #!!!Note here that seqs needs to be changed to input in order to read from the input array.
+    la $t7, seqs #address of seq for y in the loop 
     add $t2, $0, $0
     blt $t0, $t1, innerloop
     
