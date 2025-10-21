@@ -1,8 +1,8 @@
 .data
 N: .word 4 #number of words
 L: .word 6 #lenght of sequnces
-seqs: .word 43, 52, 25, 32  #each sequence is 4x4 bytes in space
-result: .space 64 # we need to store 16 results
+seqs: .word 43, 52, 25, 32  
+result: .space 64 # we need to store 16 results #each sequence is 4x4 words and it is 16x4 bytes in space
 .text
 main:
 
@@ -77,9 +77,9 @@ blt $t0, $t1, outerloop
 jump:
 add $t0, $0, $0 #i variable in the for loop
 la $t2, result #loads address of result
-
+mul $t1, $t1, $t1 
 print:
-    beq $t0, 16, endprint
+    beq $t0, $t1, endprint
     lw $a0, 0($t2)
     li $v0, 1
     syscall
