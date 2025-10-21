@@ -97,7 +97,7 @@ blt $t0, $t1, outerloop
 jump:
 add $t0, $0, $0 #i variable in the for loop
 la $t2, result #loads address of result
-mul $t1, $t1, $t1 
+sll $t1, $t1, 2 
 print:
     
     lw $a0, 0($t2)
