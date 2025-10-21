@@ -1,8 +1,8 @@
 .data
 N: .word 4 #number of words
-L: .word 6 # how long is each word in bytes
-seqs: .space 16 #each sequence is 4x6 bytes in space
-result: .space 16 # we need to store 16 results
+L: .word 6 #lenght of sequnces
+seqs: .word 43, 52, 25, 32  #each sequence is 4x4 bytes in space
+result: .space 64 # we need to store 16 results
 .text
 main:
 
@@ -10,31 +10,10 @@ main:
 la $t0, N #address of N is t0, expandable
 lw $t1, 0($t0) #reads address goes to memory and stores value in t1 register
 
-#load L into registers
-la $t2, L #address of L is in t2, expandable
-lw $t3, 0($t2) 
-
-#load address of array into a register
-la $t2, seqs #contains the address of the array in memory
-
-#for(i= 0, i < 4, i ++)
-#{
-#    sequence[i] = userInput();
-#}
-
-
-add $t0, $0, $0 #my i in my case
-for: 
-li $v0, 5 #loads value from input to register
-syscall
-add $t4, $0, $v0 #store value in register t4
-
-sw $t4, 0($t2) #store this into memory 
-addi $t2, $t2, 4
-addi $t0, $t0, 1 #increment i
-blt $t0, $t1, for
-
 #calculate hamming distance and record it into memory array
+la $t2, L 
+lw $t3, 0($t2)
+
 
 #int z;
 #for(int i = 0, i < 4, i ++)
@@ -66,12 +45,17 @@ outerloop:
     
 innerloop:
     lw $t8, 0($t7) #contains the word corresponding to that address y
-    beq $t0, $t2, skipxor
     xor $t9, $t6, $t8 #Computes hamming distance but in binary
-    sw $t9, 0($t4)#Store result in memory
+    add $s0, $0, $0 #i for counter in the loop
+    add $s1, $0, $0
+    count1s:
+        andi $s2, $t9, 1 # and the first element to check for 1
+        add $s1, $s1, $s2 # add the count from the and operation. Either 1 or 0 
+        addi $s0, $s0, 1 # increment counter
+        srl $t9, $t9, 1
+        blt $s0, $t3, count1s 
+    sw $s1, 0($t4)#Store result in memory
     addi $t4, $t4, 4 #increment Z
-    
-skipxor:
     addi $t2, $t2, 1
     addi $t7, $t7, 4 #increment address of inner loop  
 blt $t2, $t1, innerloop
