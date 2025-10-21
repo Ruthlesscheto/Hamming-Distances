@@ -1,4 +1,4 @@
-#!binbash
+#!bin/bash
 
 echo Results
 python Hamming Distance.py 100 64 10
